@@ -86,12 +86,11 @@ def create_hdf5(out, root_dir, short_size):
         if not os.path.isdir(d):
             continue
 
-        for root, _, fnames in sorted(os.walk(d)):
-            if len(fnames) == 0:
-                continue
-
-            num_ex = len(os.listdir(root))
-            print(root, num_ex)
+        for root in os.scandir(d):
+            if root.is_dir():
+                fnames = list(os.scandir(root))
+                num_ex = len(os.listdir(root))
+                print(root, num_ex)
 
             class_name = os.path.basename(root)
             grps[target].create_dataset(class_name,
@@ -99,7 +98,8 @@ def create_hdf5(out, root_dir, short_size):
                                         dtype=special_uint8)
             assert len(fnames) == num_ex
 
-            for ex_i, fname in enumerate(sorted(fnames)):
+            for ex_i, fname in tqdm(enumerate(fnames)):
+                fname = fname.name
                 if _has_file_allowed_extension(fname):
                     with open(os.path.join(root, fname), 'rb') as f:
                         img_bytes = f.read()
