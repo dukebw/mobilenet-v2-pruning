@@ -24,7 +24,7 @@ import h5py
 import numpy as np
 import path
 from PIL import Image
-
+from tqdm import tqdm
 
 IMG_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm', '.tif']
 
